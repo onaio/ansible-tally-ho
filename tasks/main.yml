@@ -1,0 +1,6 @@
+---
+- name: Copy static files
+  include_tasks: static.yml
+  tags:
+    - install
+    - django

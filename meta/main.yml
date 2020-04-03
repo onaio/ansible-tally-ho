@@ -1,0 +1,137 @@
+---
+galaxy_info:
+  author: Ona Engineering
+  company: Ona Systems Inc
+  description: Install and configure tally-ho app.
+  license: Apache 2
+  min_ansible_version: 2.6
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+
+dependencies:
+  - role: ANXS.postgresql
+    become: true
+    become_user: "root"
+    vars:
+      postgresql_version: 10
+      postgresql_encoding: "UTF-8"
+      postgresql_locale: "en_US.UTF-8"
+      postgresql_ctype: "en_US.UTF-8"
+      postgresql_admin_user: "postgres"
+      postgresql_default_auth_method: "peer"
+      postgresql_service_enabled: true
+      postgresql_cluster_name: "main"
+      postgresql_cluster_reset: false
+      postgresql_databases:
+        - name: "{{ tally_ho_django_system_user }}"
+          owner: "{{ tally_ho_django_system_user }}"
+      postgresql_users:
+        - name: "{{ tally_ho_postgres_user }}"
+          pass: "{{ tally_ho_postgres_password }}"
+          encrypted: yes
+      postgresql_ext_postgis_deps:
+        - libgeos-c1v5
+        - "postgresql-{{postgresql_version}}-postgis-{{postgresql_ext_postgis_version}}"
+        - "postgresql-{{postgresql_version}}-postgis-scripts"
+      postgresql_ext_install_postgis: yes
+      postgresql_ext_postgis_version: "2.4"
+      postgresql_database_extensions:
+        - db: "{{ tally_ho_django_system_user }}"
+          extensions:
+            - postgis
+      postgresql_user_privileges:
+        - name: "{{ tally_ho_django_system_user }}"
+          db: "{{ tally_ho_django_system_user }}"
+          priv: "ALL"
+          role_attr_flags: "CREATEDB"
+    tags:
+      - 'postgresql'
+    when:
+      - tally_ho_deploy_postgres == true
+
+  - name: "Setup redis"
+    role: DavidWittman.redis
+    become: true
+    become_user: "root"
+    vars:
+      redis_bind: "{{ tally_ho_redis_bind }}"
+      redis_port: "{{ tally_ho_redis_port }}"
+      redis_password: "{{ tally_ho_redis_password }}"
+      redis_version: "{{ tally_ho_redis_version }}"
+      redis_install_dir: "{{ tally_ho_redis_install_dir }}"
+      redis_dir: "{{ tally_ho_redis_dir }}"
+      redis_verify_checksum: "{{ tally_ho_redis_verify_checksum }}"
+      redis_tarball: "{{ tally_ho_redis_tarball }}"
+      redis_make_32bit: "{{ tally_ho_redis_make_32bit }}"
+      redis_user: "{{ tally_ho_redis_user }}"
+      redis_group: "{{ tally_ho_redis_group }}"
+      redis_nofile_limit: "{{ tally_ho_redis_nofile_limit }}"
+      redis_as_service: "{{ tally_ho_redis_as_service }}"
+      redis_local_facts: "{{ tally_ho_redis_local_facts }}"
+      redis_service_name: "{{ tally_ho_redis_service_name }}"
+      redis_min_slaves_to_write: "{{ tally_ho_redis_min_slaves_to_write }}"
+      redis_min_slaves_max_lag: "{{ tally_ho_redis_min_slaves_max_lag }}"
+      redis_tcp_backlog: "{{ tally_ho_redis_tcp_backlog }}"
+      redis_tcp_keepalive: "{{ tally_ho_redis_tcp_keepalive }}"
+      redis_maxclients: "{{ tally_ho_redis_maxclients }}"
+      redis_timeout: "{{ tally_ho_redis_timeout }}"
+      redis_socket_path: "{{ tally_ho_redis_socket_path }}"
+      redis_socket_perm: "{{ tally_ho_redis_socket_perm }}"
+    tags:
+      - redis
+
+  - name: "Setup django"
+    role: onaio.django
+    become: true
+    become_user: "root"
+    vars:
+      django_system_user: "{{ tally_ho_django_system_user }}"
+      django_system_group: "{{ tally_ho_django_system_group }}"
+      system_user_home: "{{ tally_ho_django_system_user_home }}"
+      django_git_url: "{{ tally_ho_django_git_url }}"
+      django_git_version: "{{ tally_ho_django_git_version }}"
+      django_git_key: "{{ tally_ho_django_git_key }}"
+      django_git_key_ssh_file: "{{ tally_ho_django_git_key_ssh_file }}"
+      django_git_key_filename: "{{ tally_ho_django_git_key_filename }}"
+      django_remove_git_key: true
+      django_recreate_virtual_env: "{{ tally_ho_django_recreate_virtual_env }}"
+      django_codebase_path: "{{ tally_ho_django_codebase_path }}"
+      django_versioned_path: "{{ tally_ho_django_versioned_path }}"
+      django_checkout_path: "{{ tally_ho_django_checkout_path }}"
+      django_venv_path: "{{ tally_ho_django_venv_path }}"
+      django_celery_app: "{{ tally_ho_django_celery_app }}"
+      django_celeryd_nodes: "{{ tally_ho_django_celeryd_nodes }}"
+      django_celeryd_opts: "{{ tally_ho_django_celeryd_opts }}"
+      django_python_source_version: "{{ tally_ho_django_python_source_version }}"
+      django_python_version: "{{ tally_ho_django_python_version }}"
+      django_enable_celery: "{{ tally_ho_django_enable_celery }}"
+      django_local_settings_path: "{{ tally_ho_django_local_settings_path }}"
+      django_settings_module: "{{ tally_ho_django_app_settings_module }}"
+      django_wsgi_module: "{{ tally_ho_django_wsgi_module }}"
+      django_init_commands: "{{ tally_ho_django_init_commands }}"
+      django_pip_packages: "{{ tally_ho_django_pip_packages }}"
+      django_settings: "{{ tally_ho_django_app_settings }}"
+      django_use_regular_old_pip: true
+      django_use_pipenv: false
+      django_system_wide_dependencies: "{{ tally_ho_django_system_wide_dependencies }}"
+      django_manage_services: true
+      django_service_name: "{{ tally_ho_django_service_name }}"
+      django_service_type: "{{ tally_ho_django_service_type }}"
+      django_service_restart: "{{ tally_ho_django_service_restart }}"
+      django_service_group: "{{ tally_ho_django_service_group }}"
+      django_service_unit_after: "{{ tally_ho_django_service_unit_after }}"
+      django_service_install_wantedby: "{{ tally_ho_django_service_install_wantedby }}"
+      django_pid_socks_dir: "{{ tally_ho_django_pid_socks_dir }}"
+      django_wsgi_socket: "{{ tally_ho_django_wsgi_socket }}"
+      django_static_path: "{{ tally_ho_django_static_path }}"
+      django_media_path: "{{ tally_ho_django_media_path }}"
+      django_proxy_read_timeout: "{{ tally_ho_django_proxy_read_timeout }}"
+      django_top_python_statements: "{{ tally_ho_django_top_python_statements  }}"
+      django_bottom_python_statements: "{{ tally_ho_django_bottom_python_statements  }}"
+      django_pip_paths: "{{ tally_ho_requirements_paths }}"
+      django_settings_template_path: "{{ tally_ho_django_settings_template_path }}"
+      django_copy_key_from_file: true
+    tags:
+      - django

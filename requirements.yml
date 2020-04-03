@@ -1,0 +1,14 @@
+---
+- src: git+https://github.com/onaio/ansible-nginx
+  name: nginx
+  version: eca5049500549c4e12cb4cb663a8b4f8499ac39b
+- src: git+https://github.com/onaio/ansible-django
+  name: django
+  version: master
+- src: https://github.com/ANXS/postgresql
+  name: ANXS.postgresql
+  version: f326a92b02e63224a65076565cc9873768faee25
+- name: ANXS.python
+  version: v2.0.0
+- name: DavidWittman.redis
+  version: 1.2.5

@@ -1,0 +1,198 @@
+# git
+tally_ho_django_git_key: "{{ vault_tally_ho_django_git_key }}"
+tally_ho_django_git_key_filename: "git_key"
+tally_ho_remove_git_key: true
+
+# OS
+ansible_os_family: "Debian"
+ansible_ssh_user: ubuntu
+
+# server setup
+server_monitoring_set_hostname: True
+collectd_version: "5.7.*"
+monit_version: "1:5.25.*"
+
+# user
+tally_ho_django_system_user: "tally-ho-stage"
+
+# Postgres
+tally_ho_deploy_postgres: true
+tally_ho_postgres_host: "127.0.0.1"
+tally_ho_postgres_db: "{{ tally_ho_django_system_user }}"
+tally_ho_postgres_user: "{{ tally_ho_django_system_user }}"
+tally_ho_postgres_password: "{{ vault_tally_ho_postgres_password }}"
+
+# nginx
+deployed_site_name: "tallyho.onalabs.org"
+tally_ho_use_nginx: True
+tally_ho_nginx_first_start: true
+tally_ho_nginx_site_names:
+  - "{{ deployed_site_name }}"
+tally_ho_nginx_www_site_names:
+  - "www.tallyho.onalabs.org"
+tally_ho_nginx_site_name: "{{ tally_ho_nginx_site_names[0] }}"
+tally_ho_nginx_http_site_name: "{{ deployed_site_name }}-http"
+tally_ho_nginx_https_site_name: "{{ deployed_site_name }}-https"
+
+tally_ho_nginx_enabled_sites:
+ - "{{ tally_ho_nginx_http_site_name }}"
+ - "{{ tally_ho_nginx_https_site_name }}"
+tally_ho_nginx_client_max_body_size: "100M"
+tally_ho_nginx_ssl_dir: "/etc/nginx/ssl/{{ deployed_site_name }}"
+tally_ho_nginx_log_path: "/var/log/nginx"
+tally_ho_nginx_large_client_header_buffers: "4 8k"
+nginx_basic_auth_files:
+  - path: "/etc/nginx/.htpasswd"
+    users:
+      - username: "tallyho"
+        password: "{{ vault_tally_ho_nginx_password }}"
+        state: "present"
+
+tally_ho_nginx_sites:
+  - server:
+      name: "{{ tally_ho_nginx_http_site_name }}"
+      listen:
+      - "80"
+      - "[::]:80"
+      server_name: "{{ tally_ho_nginx_site_names|join(' ') }}"
+      rewrite: "^(.*) http://{{ tally_ho_nginx_site_name }}$1 permanent"
+      ssl:
+        enabled: False
+  - server:
+      name: "{{ tally_ho_nginx_https_site_name }}"
+      listen:
+        - "443"
+        - "[::]:443"
+      server_name: "{{ tally_ho_nginx_site_names|join(' ') }}"
+      ssl:
+        enabled:   true
+        cert: "fullchain.pem"
+        key: "privkey.pem"
+        src_dir: "/etc/letsencrypt/live/{{ deployed_site_name }}"
+        conf: "{{ deployed_site_name }}-ssl.conf"
+        remote_src: true
+        create_symlink: true
+      location1:
+        name: "/"
+        client_max_body_size: "{{ tally_ho_nginx_client_max_body_size }}"
+        # uwsgi backend
+        uwsgi_pass: "unix:{{ tally_ho_django_wsgi_socket }}"
+        include: "uwsgi_params"
+        proxy_read_timeout: "{{ tally_ho_django_proxy_read_timeout }}"
+        uwsgi_read_timeout: "{{ tally_ho_django_proxy_read_timeout }}"
+        # no redirects
+        proxy_redirect: "off"
+        proxy_set_header:
+          - Host $host
+          - X-Real-IP $remote_addr
+          - X-Forwarded-For $proxy_add_x_forwarded_for
+          - X-Forwarded-Host $server_name
+        # timeouts on unavailable backend(s)
+        proxy_next_upstream: "error timeout invalid_header http_500 http_502 http_503 http_504"
+      location2:
+        name: "/media/"
+        autoindex: "off"
+        expires: "1y"
+        access_log: "off"
+        add_header: "Cache-Control public"
+        alias: "{{ tally_ho_django_media_path }}"
+
+# django
+tally_ho_django_system_group: "www-data"
+tally_ho_django_recreate_virtual_env: true
+tally_ho_django_system_user_home: "/home/{{ tally_ho_django_system_user }}"
+tally_ho_django_codebase_path: "{{ tally_ho_django_system_user_home }}/app"
+tally_ho_django_versioned_path: "{{ tally_ho_django_codebase_path }}-versioned"
+tally_ho_django_checkout_path: "{{ tally_ho_django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
+tally_ho_django_venv_path: "{{ tally_ho_django_system_user_home }}/.virtualenvs/{{ tally_ho_django_system_user }}"
+tally_ho_django_settings_template: "inventories/tally-ho/templates/local_settings.py.j2"
+tally_ho_requirements_paths:
+  - "{{ tally_ho_django_checkout_path }}/requirements/dev.txt"
+tally_ho_django_python_source_version: "3.6"
+tally_ho_django_python_version: "python3.6"
+tally_ho_django_local_settings_path: "{{ tally_ho_django_checkout_path }}/tally-ho/config/settings.py"
+tally_ho_django_app_settings_module: "tally-ho.config.settings"
+tally_ho_django_wsgi_module: "tally_ho.config.wsgi:application"
+tally_ho_manage_services: True
+tally_ho_django_service_name: "{{ tally_ho_django_system_user }}"
+tally_ho_django_service_type: "notify"
+tally_ho_django_service_restart: "on-failure"
+tally_ho_django_service_group: "{{ tally_ho_django_system_group }}"
+tally_ho_django_service_unit_after: "network.target"
+tally_ho_django_service_install_wantedby: "multi-user.target"
+tally_ho_django_pid_socks_dir: "/var/run/{{ tally_ho_django_service_name }}"
+tally_ho_django_wsgi_socket: "{{ tally_ho_django_pid_socks_dir }}/{{ tally_ho_django_system_user }}.sock"
+tally_ho_django_proxy_read_timeout: "300s"
+tally_ho_django_settings_template_path: "{{ tally_ho_django_settings_template }}"
+tally_ho_docs_path: "{{ tally_ho_django_checkout_path }}/api/static/docs"
+tally_ho_django_static_path: "/var/www/{{ tally_ho_django_system_user }}/static"
+tally_ho_django_media_path: "/var/www/{{ tally_ho_django_system_user }}/media"
+tally_ho_django_init_commands:
+  - check
+  - migrate --noinput
+tally_ho_django_pip_packages:
+  - uwsgi
+  - redis>3
+  - django-debug-toolbar
+
+tally_ho_django_git_url: "git@github.com:onaio/tally-ho.git"
+tally_ho_django_git_version: "master"
+tally_ho_django_tally_ho_use_regular_old_pip: false
+tally_ho_django_tally_ho_use_pipenv: true
+tally_ho_django_system_wide_dependencies:
+  - build-essential
+  - git
+  - python3.6-dev
+  - binutils
+  - libproj-dev
+  - gdal-bin
+  - python-gdal
+  - libgeoip1
+  - python3-distutils
+  - libpq-dev
+
+tally_ho_django_top_python_statements:
+  - import os
+  - import raven
+  - BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+## python statements included at the bottom of settings file
+tally_ho_django_bottom_python_statements:
+  - CSRF_TRUSTED_ORIGINS = CORS_ORIGIN_WHITELIST
+
+# Certbot
+tally_ho_use_certbot: True
+tally_ho_certbot_create_certs: True
+tally_ho_certbot_mail_address: "techops+tally_ho@ona.io"
+tally_ho_certbot_renew_certs: True
+tally_ho_certbot_install_cert: True
+tally_ho_certbot_site_names:
+  - "{{ deployed_site_name }}"
+
+# redis
+tally_ho_redis_bind: "0.0.0.0"
+tally_ho_redis_port: "6379"
+tally_ho_redis_password: False
+tally_ho_redis_version: "5.0.3"
+tally_ho_redis_install_dir: "/opt/redis"
+tally_ho_redis_dir: "/var/lib/tally_ho_redis/{{ tally_ho_redis_port }}"
+tally_ho_redis_download_url: "http://download.tally_ho_redis.io/releases/redis-{{ tally_ho_redis_version }}.tar.gz"
+tally_ho_redis_verify_checksum: False
+tally_ho_redis_tarball: False
+tally_ho_redis_make_32bit: False
+tally_ho_redis_user: "redis"
+tally_ho_redis_group: "{{ tally_ho_redis_user }}"
+tally_ho_redis_nofile_limit: "16384"
+tally_ho_redis_as_service: True
+tally_ho_redis_local_facts: True
+tally_ho_redis_service_name: "redis_6379"
+tally_ho_redis_min_slaves_to_write: "0"
+tally_ho_redis_min_slaves_max_lag: "10"
+tally_ho_redis_tcp_backlog: "511"
+tally_ho_redis_tcp_keepalive: "0"
+tally_ho_redis_maxclients: "10000"
+tally_ho_redis_timeout: "0"
+tally_ho_redis_socket_path: "False"
+tally_ho_redis_socket_perm: "755"
+
+# sentry
+sentry_dsn: "{{ vault_tally_ho_sentry_dsn }}"
