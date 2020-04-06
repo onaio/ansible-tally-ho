@@ -107,7 +107,7 @@ tally_ho_django_checkout_path: "{{ tally_ho_django_versioned_path }}/{{ ansible_
 tally_ho_django_venv_path: "{{ tally_ho_django_system_user_home }}/.virtualenvs/{{ tally_ho_django_system_user }}"
 tally_ho_django_settings_template: "inventories/tally-ho/templates/local_settings.py.j2"
 tally_ho_requirements_paths:
-  - "{{ tally_ho_django_checkout_path }}/requirements/dev.txt"
+  - "{{ tally_ho_django_checkout_path }}/requirements/dev.pip"
 tally_ho_django_python_source_version: "3.6"
 tally_ho_django_python_version: "python3.6"
 tally_ho_django_local_settings_path: "{{ tally_ho_django_checkout_path }}/tally-ho/config/settings.py"
@@ -130,6 +130,9 @@ tally_ho_django_media_path: "/var/www/{{ tally_ho_django_system_user }}/media"
 tally_ho_django_init_commands:
   - check
   - migrate --noinput
+  - create_groups --noinput
+  - create_demo_users --noinput
+  - create_quarantine_checks --noinput
 tally_ho_django_pip_packages:
   - uwsgi
   - redis>3
