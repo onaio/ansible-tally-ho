@@ -28,8 +28,6 @@ tally_ho_use_nginx: True
 tally_ho_nginx_first_start: true
 tally_ho_nginx_site_names:
   - "{{ deployed_site_name }}"
-tally_ho_nginx_www_site_names:
-  - "www.tallyho.onalabs.org"
 tally_ho_nginx_site_name: "{{ tally_ho_nginx_site_names[0] }}"
 tally_ho_nginx_http_site_name: "{{ deployed_site_name }}-http"
 tally_ho_nginx_https_site_name: "{{ deployed_site_name }}-https"
@@ -105,7 +103,7 @@ tally_ho_django_codebase_path: "{{ tally_ho_django_system_user_home }}/app"
 tally_ho_django_versioned_path: "{{ tally_ho_django_codebase_path }}-versioned"
 tally_ho_django_checkout_path: "{{ tally_ho_django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
 tally_ho_django_venv_path: "{{ tally_ho_django_system_user_home }}/.virtualenvs/{{ tally_ho_django_system_user }}"
-tally_ho_django_settings_template: "inventories/tally-ho/templates/local_settings.py.j2"
+tally_ho_django_settings_template: "templates/local_settings.py.j2"
 tally_ho_requirements_paths:
   - "{{ tally_ho_django_checkout_path }}/requirements/dev.pip"
 tally_ho_django_python_source_version: "3.6"
