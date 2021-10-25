@@ -51,37 +51,6 @@ dependencies:
     when:
       - tally_ho_deploy_postgres == true
 
-  - name: "Setup redis"
-    role: DavidWittman.redis
-    become: true
-    become_user: "root"
-    vars:
-      redis_bind: "{{ tally_ho_redis_bind }}"
-      redis_port: "{{ tally_ho_redis_port }}"
-      redis_password: "{{ tally_ho_redis_password }}"
-      redis_version: "{{ tally_ho_redis_version }}"
-      redis_install_dir: "{{ tally_ho_redis_install_dir }}"
-      redis_dir: "{{ tally_ho_redis_dir }}"
-      redis_verify_checksum: "{{ tally_ho_redis_verify_checksum }}"
-      redis_tarball: "{{ tally_ho_redis_tarball }}"
-      redis_make_32bit: "{{ tally_ho_redis_make_32bit }}"
-      redis_user: "{{ tally_ho_redis_user }}"
-      redis_group: "{{ tally_ho_redis_group }}"
-      redis_nofile_limit: "{{ tally_ho_redis_nofile_limit }}"
-      redis_as_service: "{{ tally_ho_redis_as_service }}"
-      redis_local_facts: "{{ tally_ho_redis_local_facts }}"
-      redis_service_name: "{{ tally_ho_redis_service_name }}"
-      redis_min_slaves_to_write: "{{ tally_ho_redis_min_slaves_to_write }}"
-      redis_min_slaves_max_lag: "{{ tally_ho_redis_min_slaves_max_lag }}"
-      redis_tcp_backlog: "{{ tally_ho_redis_tcp_backlog }}"
-      redis_tcp_keepalive: "{{ tally_ho_redis_tcp_keepalive }}"
-      redis_maxclients: "{{ tally_ho_redis_maxclients }}"
-      redis_timeout: "{{ tally_ho_redis_timeout }}"
-      redis_socket_path: "{{ tally_ho_redis_socket_path }}"
-      redis_socket_perm: "{{ tally_ho_redis_socket_perm }}"
-    tags:
-      - redis
-
   - name: "Setup django"
     role: onaio.django
     become: true
