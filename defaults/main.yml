@@ -133,7 +133,6 @@ tally_ho_django_init_commands:
   - create_quarantine_checks --noinput
 tally_ho_django_pip_packages:
   - uwsgi
-  - redis>3
   - django-debug-toolbar
 
 tally_ho_django_git_url: "git@github.com:onaio/tally-ho.git"
@@ -168,32 +167,6 @@ tally_ho_certbot_renew_certs: True
 tally_ho_certbot_install_cert: True
 tally_ho_certbot_site_names:
   - "{{ deployed_site_name }}"
-
-# redis
-tally_ho_redis_bind: "0.0.0.0"
-tally_ho_redis_port: "6379"
-tally_ho_redis_password: False
-tally_ho_redis_version: "5.0.3"
-tally_ho_redis_install_dir: "/opt/redis"
-tally_ho_redis_dir: "/var/lib/tally_ho_redis/{{ tally_ho_redis_port }}"
-tally_ho_redis_download_url: "http://download.tally_ho_redis.io/releases/redis-{{ tally_ho_redis_version }}.tar.gz"
-tally_ho_redis_verify_checksum: False
-tally_ho_redis_tarball: False
-tally_ho_redis_make_32bit: False
-tally_ho_redis_user: "redis"
-tally_ho_redis_group: "{{ tally_ho_redis_user }}"
-tally_ho_redis_nofile_limit: "16384"
-tally_ho_redis_as_service: True
-tally_ho_redis_local_facts: True
-tally_ho_redis_service_name: "redis_6379"
-tally_ho_redis_min_slaves_to_write: "0"
-tally_ho_redis_min_slaves_max_lag: "10"
-tally_ho_redis_tcp_backlog: "511"
-tally_ho_redis_tcp_keepalive: "0"
-tally_ho_redis_maxclients: "10000"
-tally_ho_redis_timeout: "0"
-tally_ho_redis_socket_path: "False"
-tally_ho_redis_socket_perm: "755"
 
 # sentry
 sentry_dsn: "{{ vault_tally_ho_sentry_dsn }}"

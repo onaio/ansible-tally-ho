@@ -8,10 +8,9 @@ This role depends on the [ansible-django](https://github.com/onaio/ansible-djang
 
 Basically, this is what it does:
 
-1. Installs Redis
-2. Installs the tally-ho web server, which is a Django application
-3. Finishes setting up Django
-4. Installs SSL certificates if necessary
+1. Installs the tally-ho web server, which is a Django application
+2. Finishes setting up Django
+3. Installs SSL certificates if necessary
 
 ## Role variables
 
