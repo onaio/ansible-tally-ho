@@ -1,7 +1,8 @@
 # git
-tally_ho_django_git_key: "{{ vault_tally_ho_django_git_key }}"
-tally_ho_django_git_key_filename: "git_key"
-tally_ho_remove_git_key: true
+tally_ho_django_git_key:
+tally_ho_django_git_key_filename:
+tally_ho_remove_git_key:
+tally_ho_django_git_key_ssh_file:
 
 # OS
 ansible_os_family: "Debian"
@@ -20,7 +21,7 @@ tally_ho_deploy_postgres: true
 tally_ho_postgres_host: "127.0.0.1"
 tally_ho_postgres_db: "{{ tally_ho_django_system_user }}"
 tally_ho_postgres_user: "{{ tally_ho_django_system_user }}"
-tally_ho_postgres_password: "{{ vault_tally_ho_postgres_password }}"
+tally_ho_postgres_password:
 
 # nginx
 deployed_site_name: "tallyho.onalabs.org"
@@ -94,6 +95,13 @@ tally_ho_nginx_sites:
         access_log: "off"
         add_header: "Cache-Control public"
         alias: "{{ tally_ho_django_media_path }}"
+      location3:
+        name: "/static/"
+        autoindex: "off"
+        expires: "1y"
+        access_log: "off"
+        add_header: "Cache-Control public"
+        alias: "{{ tally_ho_django_static_path }}"
 
 # django
 tally_ho_django_system_group: "www-data"
@@ -103,14 +111,14 @@ tally_ho_django_codebase_path: "{{ tally_ho_django_system_user_home }}/app"
 tally_ho_django_versioned_path: "{{ tally_ho_django_codebase_path }}-versioned"
 tally_ho_django_checkout_path: "{{ tally_ho_django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
 tally_ho_django_venv_path: "{{ tally_ho_django_system_user_home }}/.virtualenvs/{{ tally_ho_django_system_user }}"
-tally_ho_django_settings_template: "templates/local_settings.py.j2"
+tally_ho_django_settings_template: "../roles/tally-ho/templates/local_settings.py.j2"
 tally_ho_requirements_paths:
   - "{{ tally_ho_django_checkout_path }}/requirements/dev.pip"
 tally_ho_django_python_source_version: "3.6"
 tally_ho_django_python_version: "python3.6"
-tally_ho_django_local_settings_path: "{{ tally_ho_django_checkout_path }}/tally-ho/config/settings.py"
-tally_ho_django_app_settings_module: "tally-ho.config.settings"
-tally_ho_django_wsgi_module: "tally_ho.config.wsgi:application"
+tally_ho_django_local_settings_path: "{{ tally_ho_django_checkout_path }}/tally_ho/config/settings.py"
+tally_ho_django_app_settings_module: "tally_ho.config.settings"
+tally_ho_django_wsgi_module: "tally_ho.wsgi:application"
 tally_ho_manage_services: True
 tally_ho_django_service_name: "{{ tally_ho_django_system_user }}"
 tally_ho_django_service_type: "notify"
@@ -123,14 +131,14 @@ tally_ho_django_wsgi_socket: "{{ tally_ho_django_pid_socks_dir }}/{{ tally_ho_dj
 tally_ho_django_proxy_read_timeout: "300s"
 tally_ho_django_settings_template_path: "{{ tally_ho_django_settings_template }}"
 tally_ho_docs_path: "{{ tally_ho_django_checkout_path }}/api/static/docs"
-tally_ho_django_static_path: "/var/www/{{ tally_ho_django_system_user }}/static"
-tally_ho_django_media_path: "/var/www/{{ tally_ho_django_system_user }}/media"
+tally_ho_django_static_path: "{{ tally_ho_django_codebase_path }}/tally_ho/apps/tally/static/"
+tally_ho_django_media_path: "{{ tally_ho_django_codebase_path }}/tally_ho/apps/tally/media/"
 tally_ho_django_init_commands:
-  - check
-  - migrate --noinput
-  - create_groups --noinput
-  - create_demo_users --noinput
-  - create_quarantine_checks --noinput
+  - check --settings={{ tally_ho_django_app_settings_module }}
+  - migrate --settings={{ tally_ho_django_app_settings_module }}
+  - create_groups --settings={{ tally_ho_django_app_settings_module }}
+  - create_demo_users --settings={{ tally_ho_django_app_settings_module }}
+  - create_quarantine_checks --settings={{ tally_ho_django_app_settings_module }}
 tally_ho_django_pip_packages:
   - uwsgi
   - django-debug-toolbar
@@ -170,3 +178,6 @@ tally_ho_certbot_site_names:
 
 # sentry
 sentry_dsn: "{{ vault_tally_ho_sentry_dsn }}"
+
+# uwsgi
+tally_ho_django_wsgi_env: "DJANGO_SETTINGS_MODULE={{ tally_ho_django_app_settings_module }}"
