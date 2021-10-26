@@ -61,7 +61,7 @@ dependencies:
       system_user_home: "{{ tally_ho_django_system_user_home }}"
       django_git_url: "{{ tally_ho_django_git_url }}"
       django_git_version: "{{ tally_ho_django_git_version }}"
-      django_git_key: "{{ tally_ho_django_git_key }}"
+      django_git_key_content: "{{ tally_ho_django_git_key }}"
       django_git_key_ssh_file: "{{ tally_ho_django_git_key_ssh_file }}"
       django_git_key_filename: "{{ tally_ho_django_git_key_filename }}"
       django_remove_git_key: true
@@ -70,18 +70,13 @@ dependencies:
       django_versioned_path: "{{ tally_ho_django_versioned_path }}"
       django_checkout_path: "{{ tally_ho_django_checkout_path }}"
       django_venv_path: "{{ tally_ho_django_venv_path }}"
-      django_celery_app: "{{ tally_ho_django_celery_app }}"
-      django_celeryd_nodes: "{{ tally_ho_django_celeryd_nodes }}"
-      django_celeryd_opts: "{{ tally_ho_django_celeryd_opts }}"
       django_python_source_version: "{{ tally_ho_django_python_source_version }}"
       django_python_version: "{{ tally_ho_django_python_version }}"
-      django_enable_celery: "{{ tally_ho_django_enable_celery }}"
       django_local_settings_path: "{{ tally_ho_django_local_settings_path }}"
       django_settings_module: "{{ tally_ho_django_app_settings_module }}"
       django_wsgi_module: "{{ tally_ho_django_wsgi_module }}"
       django_init_commands: "{{ tally_ho_django_init_commands }}"
       django_pip_packages: "{{ tally_ho_django_pip_packages }}"
-      django_settings: "{{ tally_ho_django_app_settings }}"
       django_use_regular_old_pip: true
       django_use_pipenv: false
       django_system_wide_dependencies: "{{ tally_ho_django_system_wide_dependencies }}"
@@ -102,5 +97,8 @@ dependencies:
       django_pip_paths: "{{ tally_ho_requirements_paths }}"
       django_settings_template_path: "{{ tally_ho_django_settings_template_path }}"
       django_copy_key_from_file: true
+      django_enable_celery:
+      django_manage_services: true
+      django_wsgi_env: "{{ tally_ho_django_wsgi_env }}"
     tags:
       - django
