@@ -1,0 +1,9 @@
+- name: Run Django collectstatic command
+  django_manage:
+    command: "collectstatic --no-input"
+    app_path: "{{ tally_ho_django_codebase_path }}"
+    virtualenv: "{{ tally_ho_django_venv_path }}"
+  become: True
+  become_user: "{{ tally_ho_django_system_user }}"
+  notify:
+    - restart_service
