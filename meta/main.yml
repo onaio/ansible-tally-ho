@@ -100,5 +100,6 @@ dependencies:
       django_enable_celery:
       django_manage_services: true
       django_wsgi_env: "{{ tally_ho_django_wsgi_env }}"
+      django_python_packages: "{{ tally_ho_django_python_packages }}"
     tags:
       - django
