@@ -23,7 +23,6 @@ tally_ho_application_server_two:
 # Postgres
 tally_ho_deploy_postgres: true
 tally_ho_postgres_host: "{{ tally_ho_postgres_host }}"
-tally_ho_postgres_host: "{{ tally_ho_postgres_host }}"
 tally_ho_postgres_db: "{{ tally_ho_postgres_db }}"
 tally_ho_postgres_user: "{{ tally_ho_postgres_user }}"
 tally_ho_postgres_password: "{{ tally_ho_postgres_password }}"
@@ -140,8 +139,8 @@ tally_ho_django_wsgi_socket: "{{ tally_ho_django_pid_socks_dir }}/{{ tally_ho_dj
 tally_ho_django_proxy_read_timeout: "300s"
 tally_ho_django_settings_template_path: "{{ tally_ho_django_settings_template }}"
 tally_ho_docs_path: "{{ tally_ho_django_checkout_path }}/api/static/docs"
-tally_ho_django_static_path: "{{ tally_ho_django_codebase_path }}/tally_ho/apps/tally/static/"
-tally_ho_django_media_path: "{{ tally_ho_django_codebase_path }}/tally_ho/apps/tally/media/"
+tally_ho_django_static_path: "{{ tally_ho_django_checkout_path }}/static/"
+tally_ho_django_media_path: "{{ tally_ho_django_checkout_path }}/media/"
 tally_ho_django_init_commands:
   - check --settings={{ tally_ho_django_app_settings_module }}
   - migrate --settings={{ tally_ho_django_app_settings_module }}
