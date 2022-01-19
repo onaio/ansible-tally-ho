@@ -175,6 +175,7 @@ tally_ho_django_top_python_statements:
 ## python statements included at the bottom of settings file
 tally_ho_django_bottom_python_statements:
   - CSRF_TRUSTED_ORIGINS = CORS_ORIGIN_WHITELIST
+tally_ho_django_setuptools_version: "57.5.0"
 
 # Certbot
 tally_ho_use_certbot: True
