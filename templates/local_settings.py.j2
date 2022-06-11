@@ -8,9 +8,9 @@ SECRET_KEY = 'el7%8*2=m()uxvg%ebet#o81y(qi%yi-k&&4iz^z=sces+i9lt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+
 ALLOWED_HOSTS = ['localhost', 'tallyho.onalabs.org', "{{ tally_ho_application_server_one }}", "{{ tally_ho_application_server_two }}"]
 INTERNAL_IPS = ["127.0.0.1", "{{ tally_ho_application_server_one }}", "{{ tally_ho_application_server_two }}"]
-
 
 # Application definition
 
@@ -72,14 +72,14 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
-# media base
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = "{{ tally_ho_django_static_path }}"
+MEDIA_ROOT = "{{ tally_ho_django_media_path  }}"
+MEDIA_URL = "/media/"
 
 
 AUTHENTICATION_BACKENDS = (

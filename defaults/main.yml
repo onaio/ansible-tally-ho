@@ -23,7 +23,6 @@ tally_ho_application_server_two:
 # Postgres
 tally_ho_deploy_postgres: true
 tally_ho_postgres_host: "{{ tally_ho_postgres_host }}"
-tally_ho_postgres_host: "{{ tally_ho_postgres_host }}"
 tally_ho_postgres_db: "{{ tally_ho_postgres_db }}"
 tally_ho_postgres_user: "{{ tally_ho_postgres_user }}"
 tally_ho_postgres_password: "{{ tally_ho_postgres_password }}"
