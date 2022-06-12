@@ -115,7 +115,7 @@ tally_ho_django_codebase_path: "{{ tally_ho_django_system_user_home }}/app"
 tally_ho_django_versioned_path: "{{ tally_ho_django_codebase_path }}-versioned"
 tally_ho_django_checkout_path: "{{ tally_ho_django_versioned_path }}/{{ ansible_date_time['epoch'] }}"
 tally_ho_django_venv_path: "{{ tally_ho_django_system_user_home }}/.virtualenvs/{{ tally_ho_django_system_user }}"
-tally_ho_django_settings_template: "../roles/tally-ho/templates/local_settings.py.j2"
+tally_ho_django_settings_template: "checkoutpath/tally_ho/config/settings.py.j2"
 tally_ho_requirements_paths:
   - "{{ tally_ho_django_checkout_path }}/requirements/dev.pip"
 tally_ho_django_python_source_version: "3.8"
