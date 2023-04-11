@@ -11,46 +11,6 @@ galaxy_info:
         - xenial
 
 dependencies:
-  - role: ANXS.postgresql
-    become: true
-    become_user: "root"
-    vars:
-      postgresql_version: 10
-      postgresql_encoding: "UTF-8"
-      postgresql_locale: "en_US.UTF-8"
-      postgresql_ctype: "en_US.UTF-8"
-      postgresql_admin_user: "postgres"
-      postgresql_default_auth_method: "peer"
-      postgresql_service_enabled: true
-      postgresql_cluster_name: "main"
-      postgresql_cluster_reset: false
-      postgresql_databases:
-        - name: "{{ tally_ho_django_system_user }}"
-          owner: "{{ tally_ho_django_system_user }}"
-      postgresql_users:
-        - name: "{{ tally_ho_postgres_user }}"
-          pass: "{{ tally_ho_postgres_password }}"
-          encrypted: yes
-      postgresql_ext_postgis_deps:
-        - libgeos-c1v5
-        - "postgresql-{{postgresql_version}}-postgis-{{postgresql_ext_postgis_version}}"
-        - "postgresql-{{postgresql_version}}-postgis-scripts"
-      postgresql_ext_install_postgis: yes
-      postgresql_ext_postgis_version: "2.4"
-      postgresql_database_extensions:
-        - db: "{{ tally_ho_django_system_user }}"
-          extensions:
-            - postgis
-      postgresql_user_privileges:
-        - name: "{{ tally_ho_django_system_user }}"
-          db: "{{ tally_ho_django_system_user }}"
-          priv: "ALL"
-          role_attr_flags: "CREATEDB"
-    tags:
-      - 'postgresql'
-    when:
-      - tally_ho_deploy_postgres == true
-
   - name: "Setup django"
     role: onaio.django
     become: true
