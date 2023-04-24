@@ -49,6 +49,7 @@ dependencies:
       django_service_install_wantedby: "{{ tally_ho_django_service_install_wantedby }}"
       django_pid_socks_dir: "{{ tally_ho_django_pid_socks_dir }}"
       django_wsgi_socket: "{{ tally_ho_django_wsgi_socket }}"
+      django_wsgi_buffer_size: "{{ tally_ho_django_wsgi_buffer_size }}"
       django_static_path: "{{ tally_ho_django_static_path }}"
       django_media_path: "{{ tally_ho_django_media_path }}"
       django_proxy_read_timeout: "{{ tally_ho_django_proxy_read_timeout }}"
