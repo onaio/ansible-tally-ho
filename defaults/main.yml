@@ -190,3 +190,6 @@ sentry_dsn: "{{ vault_tally_ho_sentry_dsn }}"
 # uwsgi
 tally_ho_django_wsgi_env: "DJANGO_SETTINGS_MODULE={{ tally_ho_django_app_settings_module }}"
 tally_ho_django_wsgi_buffer_size: 4096
+
+# i18n
+tally_ho_default_site_language_code: "en"
