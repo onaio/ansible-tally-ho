@@ -6,4 +6,4 @@
   become: True
   become_user: "{{ tally_ho_django_system_user }}"
   notify:
-    - restart_service
+    - Restart Django Service
