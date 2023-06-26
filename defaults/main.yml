@@ -107,6 +107,7 @@ tally_ho_nginx_sites:
         alias: "{{ tally_ho_django_static_path }}"
 
 # django
+tally_ho_django_debug: False
 tally_ho_django_system_group: "www-data"
 tally_ho_django_recreate_virtual_env: true
 tally_ho_django_system_user_home: "/home/{{ tally_ho_django_system_user }}"
