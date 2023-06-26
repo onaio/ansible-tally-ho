@@ -165,6 +165,8 @@ tally_ho_django_system_wide_dependencies:
   - libgeoip1
   - python3-distutils
   - libpq-dev
+  - memcached
+  - libmemcached-dev
 
 tally_ho_django_top_python_statements:
   - import os
