@@ -164,6 +164,23 @@ SESSION_VARS = [
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
+# Celery settings
+## use True for testing and False when you use rabbitMQ and celery
+CELERY_BROKER_URL = '{{ tally_ho_redis_url }}'
+CELERY_TASK_ALWAYS_EAGER = False
+CELERY_CACHE_BACKEND = '{{ tally_ho_celery_cache_backend }}'
+CELERY_BROKER_CONNECTION_MAX_RETRIES = {{ tally_ho_celery_connection_max_retries }}
+CELERY_RESULT_BACKEND = '{{ tally_ho_celery_result_backend }}'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = '{{ tally_ho_celery_cache_timezone }}'
+CELERY_ROUTES = {
+    'tally_ho.apps.tally.management.commands.import_data.*': {
+        'queue': 'tally_data_import',
+    }
+}
+
 # Quaritine trigger data
 QUARANTINE_DATA = [
     {'name': 'Trigger 1 - Guard against overvoting',
