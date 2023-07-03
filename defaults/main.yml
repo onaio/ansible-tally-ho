@@ -107,6 +107,7 @@ tally_ho_nginx_sites:
         alias: "{{ tally_ho_django_static_path }}"
 
 # django
+tally_ho_django_debug: False
 tally_ho_django_system_group: "www-data"
 tally_ho_django_recreate_virtual_env: true
 tally_ho_django_system_user_home: "/home/{{ tally_ho_django_system_user }}"
@@ -117,11 +118,11 @@ tally_ho_django_venv_path: "{{ tally_ho_django_system_user_home }}/.virtualenvs/
 tally_ho_django_settings_template: "checkoutpath/tally_ho/config/settings.py.j2"
 tally_ho_requirements_paths:
   - "{{ tally_ho_django_checkout_path }}/requirements/dev.pip"
-tally_ho_django_python_source_version: "3.8"
-tally_ho_django_python_version: "3.8"
+tally_ho_django_python_source_version: "3.9"
+tally_ho_django_python_version: "python3.9"
 tally_ho_django_python_packages:
-  - python3.8
-  - python3.8-dev
+  - python3.9
+  - python3.9-dev
   - python3-distutils
 tally_ho_django_local_settings_path: "{{ tally_ho_django_checkout_path }}/tally_ho/config/settings.py"
 tally_ho_django_app_settings_module: "tally_ho.config.settings"
@@ -157,7 +158,7 @@ tally_ho_django_tally_ho_use_pipenv: true
 tally_ho_django_system_wide_dependencies:
   - build-essential
   - git
-  - python3.8-dev
+  - python3.9-dev
   - binutils
   - libproj-dev
   - gdal-bin
@@ -165,6 +166,8 @@ tally_ho_django_system_wide_dependencies:
   - libgeoip1
   - python3-distutils
   - libpq-dev
+  - memcached
+  - libmemcached-dev
 
 tally_ho_django_top_python_statements:
   - import os
@@ -193,3 +196,40 @@ tally_ho_django_wsgi_buffer_size: 4096
 
 # i18n
 tally_ho_default_site_language_code: "en"
+
+# redis
+tally_ho_redis_bind: "0.0.0.0"
+tally_ho_redis_port: "6379"
+tally_ho_redis_password: False
+tally_ho_redis_version: "7.0.7"
+tally_ho_redis_install_dir: "/opt/redis"
+tally_ho_redis_dir: "/var/lib/tally_ho_redis/{{ tally_ho_redis_port }}"
+tally_ho_redis_verify_checksum: False
+tally_ho_redis_tarball: False
+tally_ho_redis_make_32bit: False
+tally_ho_redis_user: "redis"
+tally_ho_redis_group: "{{ tally_ho_redis_user }}"
+tally_ho_redis_nofile_limit: "16384"
+tally_ho_redis_as_service: True
+tally_ho_redis_local_facts: True
+tally_ho_redis_service_name: "redis_6379"
+tally_ho_redis_min_slaves_to_write: "0"
+tally_ho_redis_min_slaves_max_lag: "10"
+tally_ho_redis_tcp_backlog: "511"
+tally_ho_redis_tcp_keepalive: "0"
+tally_ho_redis_maxclients: "10000"
+tally_ho_redis_timeout: "0"
+tally_ho_redis_socket_path: "False"
+tally_ho_redis_socket_perm: "755"
+
+# celery
+tally_ho_django_celery_app: "tally_ho.celeryapp"
+tally_ho_django_enable_celery: true
+tally_ho_django_celeryd_nodes: "default-node"
+tally_ho_django_celeryd_opts: "--time-limit=300 --concurrency=8"
+tally_ho_memcached_uri: "127.0.0.1:11211"
+tally_ho_redis_url: "redis://127.0.0.1:6379/0"
+tally_ho_celery_result_backend: "cache+memcached://{{ tally_ho_memcached_uri }}"
+tally_ho_celery_cache_backend: "memcached"
+tally_ho_celery_cache_timezone: 'Africa/Nairobi'
+tally_ho_celery_connection_max_retries: 2
