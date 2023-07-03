@@ -164,6 +164,9 @@ SESSION_VARS = [
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
+# Memcache settings
+CLIENT_URL = '{{ tally_ho_memcached_uri }}'
+
 # Celery settings
 ## use True for testing and False when you use rabbitMQ and celery
 CELERY_BROKER_URL = '{{ tally_ho_redis_url }}'
@@ -176,7 +179,7 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = '{{ tally_ho_celery_cache_timezone }}'
 CELERY_ROUTES = {
-    'tally_ho.apps.tally.management.commands.import_data.*': {
+    'tally_ho.apps.tally.management.commands.*': {
         'queue': 'tally_data_import',
     }
 }
