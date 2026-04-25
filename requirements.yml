@@ -4,7 +4,8 @@
   version: eca5049500549c4e12cb4cb663a8b4f8499ac39b
 - src: git+https://github.com/onaio/ansible-django
   name: django
-  version: master
+  # TODO: pin to a sha once the uv-support branch lands on main.
+  version: main
 - src: https://github.com/ANXS/postgresql
   name: ANXS.postgresql
   version: f326a92b02e63224a65076565cc9873768faee25
