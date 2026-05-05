@@ -67,8 +67,10 @@ dependencies:
       django_wsgi_module: "{{ tally_ho_django_wsgi_module }}"
       django_init_commands: "{{ tally_ho_django_init_commands }}"
       django_pip_packages: "{{ tally_ho_django_pip_packages }}"
-      django_use_regular_old_pip: true
+      django_use_uv: true
+      django_use_regular_old_pip: false
       django_use_pipenv: false
+      django_use_poetry: false
       django_system_wide_dependencies: "{{ tally_ho_django_system_wide_dependencies }}"
       django_manage_services: true
       django_service_name: "{{ tally_ho_django_service_name }}"
@@ -85,7 +87,6 @@ dependencies:
       django_proxy_read_timeout: "{{ tally_ho_django_proxy_read_timeout }}"
       django_top_python_statements: "{{ tally_ho_django_top_python_statements  }}"
       django_bottom_python_statements: "{{ tally_ho_django_bottom_python_statements  }}"
-      django_pip_paths: "{{ tally_ho_requirements_paths }}"
       django_settings_template_path: "{{ tally_ho_django_settings_template_path }}"
       django_copy_key_from_file: true
       django_celery_app: "{{ tally_ho_django_celery_app }}"
@@ -94,6 +95,5 @@ dependencies:
       django_enable_celery: "{{ tally_ho_django_enable_celery }}"
       django_wsgi_env: "{{ tally_ho_django_wsgi_env }}"
       django_python_packages: "{{ tally_ho_django_python_packages }}"
-      django_setuptools_version: "{{ tally_ho_django_setuptools_version }}"
     tags:
       - django
