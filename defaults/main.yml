@@ -151,8 +151,6 @@ tally_ho_django_pip_packages:
 
 tally_ho_django_git_url: "git@github.com:onaio/tally-ho.git"
 tally_ho_django_git_version: "master"
-tally_ho_django_tally_ho_use_regular_old_pip: false
-tally_ho_django_tally_ho_use_pipenv: true
 tally_ho_django_system_wide_dependencies:
   - build-essential
   - git
